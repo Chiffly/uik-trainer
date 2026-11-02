@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#244574">
+  <meta name="description" content="Один день за стойкой УИК: 12 посетителей, документы и решения. Учебный игровой тренажёр.">
+  <title>Практикум УИК — один день за стойкой</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workbench.css">
+  <script defer src="visitors.js"></script>
+  <script defer src="game-engine.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="header"><div class="header-inner"><a href="#home" class="brand" aria-label="Практикум УИК — главная"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 15h16v12H8zM12 15l-3-7 12-5 4 10M13 9l3 2 4-5M12 20h8"/></svg></span><span>Практикум <b>УИК</b><small>Один день на участке</small></span></a><nav aria-label="Основная навигация"><a href="#home" data-nav="home">Смена</a><a href="#debrief" data-nav="progress">Разбор</a><button class="nav-button" data-action="guide">Справочник</button></nav><span class="local-label">Учебная версия</span></div></header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="footer"><span>Практикум УИК · 2026</span><span>Учебная игра · все данные вымышлены</span><button class="text-button" data-action="about">О проекте и источниках</button></footer>
+  <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title"></dialog>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="storage-warning" class="storage-warning" hidden role="status">Сохранение в браузере недоступно. Продолжайте смену, не закрывая страницу.</div>
+  <noscript><p>Для работы тренажёра включите JavaScript в настройках браузера.</p></noscript>
+</body>
+</html>
