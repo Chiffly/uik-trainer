@@ -1,6 +1,6 @@
 window.UikEngine = (() => {
   const draft=()=>({book:'main',searchText:'',events:[],answers:{},intent:null,positions:{},selectedVoter:null,opened:[],focusPaper:'register',messages:[]});
-  const fresh=(date=window.UikGameData.date,edition=0)=>({version:5,date,edition,index:0,phase:'serving',records:[],...draft()});
+  const fresh=(date=window.UikGameData.date,edition=0)=>({version:6,date,edition,index:0,phase:'serving',records:[],...draft()});
   function dossier(v,edition=0) {
     if(!v.review)return null;
     const step=(id,label,text)=>({id,label,text});
@@ -19,8 +19,8 @@ window.UikEngine = (() => {
       if(admitted)steps.push(step('reply','Запросить проверку через ТИК','Ответ ТИК · заявление на этот участок подтверждено. Сведения ошибочно пропущены в дополнительном листе.'));
       steps.push(step('decision','Получить решение УИК',admitted?'УИК решила включить Елену Корнееву в список на выбранном участке. Строка добавлена.':'УИК отказала во включении по аннулированному заявлению. Заверенная копия решения готова.'));
     } else if(v.review==='home'){
-      admitted=edition%3===0;
-      const report=['Бюллетень в Угличе не выдавался. Участок по месту нахождения готов оформить исключение.','По данным УИК Углича, бюллетень на выборах губернатора уже получен.','До окончания голосования ответ с выбранного участка не поступил.'][edition%3];
+      admitted=edition%2===1;
+      const report=['Бюллетень в Угличе не выдавался. Участок по месту нахождения готов оформить исключение.','По данным УИК Углича, бюллетень на выборах губернатора уже получен.','До окончания голосования ответ с выбранного участка не поступил.'][admitted ? 0 : 1 + (Math.floor(edition / 2) % 2)];
       steps=[step('registry','Открыть реестр исключений','Наумов Олег Львович · исключён по заявлению. Выбранный участок в Угличе.'),
         step('petition','Принять бумажное заявление','Наумов подписал личное заявление о включении в список по месту жительства.'),
         step('reply','Проверить выдачу на выбранном участке',report),
@@ -128,7 +128,7 @@ window.UikEngine = (() => {
   }
   function results(s,visitors){if(s.phase!=='complete'||s.records.length!==visitors.length)return null;const rows=s.records.map((r,i)=>({record:r,visitor:visitors[i],checks:evaluate(r,visitors[i])}));return {rows,perfect:rows.filter(r=>r.checks.every(c=>c.ok)).length,errors:rows.reduce((n,r)=>n+r.checks.filter(c=>!c.ok).length,0),decisions:rows.filter(r=>r.checks[0].ok).length};}
   function restore(s,visitors){
-    if(!s||s.version!==5||!Number.isInteger(s.edition)||s.edition<0||typeof s.date!=='string'||!/^\d{2}\.\d{2}\.\d{4}$/.test(s.date)||!Number.isInteger(s.index)||s.index<0||s.index>=visitors.length||!['serving','departed','complete'].includes(s.phase)||!Array.isArray(s.events)||!s.events.every(e=>typeof e==='string')||!Array.isArray(s.records)||s.records.length!==(s.phase==='serving'?s.index:s.index+1)||s.phase==='complete'&&s.index!==visitors.length-1)return null;
+    if(!s||s.version!==6||!Number.isInteger(s.edition)||s.edition<0||typeof s.date!=='string'||!/^\d{2}\.\d{2}\.\d{4}$/.test(s.date)||!Number.isInteger(s.index)||s.index<0||s.index>=visitors.length||!['serving','departed','complete'].includes(s.phase)||!Array.isArray(s.events)||!s.events.every(e=>typeof e==='string')||!Array.isArray(s.records)||s.records.length!==(s.phase==='serving'?s.index:s.index+1)||s.phase==='complete'&&s.index!==visitors.length-1)return null;
     if(!s.answers||typeof s.answers!=='object'||!Array.isArray(s.messages)||!Array.isArray(s.opened)||!s.positions||typeof s.positions!=='object'||![null,'issue','decline'].includes(s.intent))return null;
     if(s.records.some((r,i)=>!r||r.id!==visitors[i].id||!['issue','decline'].includes(r.decision)||!Array.isArray(r.events)||!r.events.every(e=>typeof e==='string')||!r.answers||!Array.isArray(r.messages)))return null;
     return s;
